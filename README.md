@@ -18,3 +18,5 @@ If the player doesn't answer in time, they lose a point. The score can pass unde
 If the player places an incorrect word in the box, it's game over and the game restarts.
 
 The player completes the game when there are no words left. The game restarts
+
+All HTML, JavaScript, CSS codes are all in the same HTML file for easier __.
