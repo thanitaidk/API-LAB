@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Hello tet!</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
+  </script>
+   <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.js">
+   </script>
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  
+  <style>
+    
+  html {
+    user-select: none;
+    overflow: hidden;
+  }
+  body {
+    position: relative;
+    font-family: 'test'; 
+    font-variation-settings: 'wght' 50;
+  }
+  @font-face { 
+    font-family: 'test'; 
+    src: url('https://cdn.glitch.com/b697b48c-d0d7-464e-a80a-a78adb9ac08e%2FFunkisMAUDemoGX.ttf?1537866579638'); 
+  }
+  /* the area the words are placed*/
+  #demo { 
+    width: 90%;
+    display: flex;
+    position: absolute;
+    top: 150px;
+    left: 10%;
+    flex-wrap: wrap;
+  }
+  #Counter {
+    color: red;
+    width: 20%;
+    display: flex;
+    position: absolute;
+    top: 50px;
+    left: 60%;
+    flex-wrap: wrap;
+  }
+  #Points {
+    color: blue;
+    width: 20%;
+    display: flex;
+    position: absolute;
+    top: 20px;
+    left: 60%;
+    flex-wrap: wrap;
+  }
+  #Words { 
+    width: 30%;
+    font-size: 40px;
+    display: flex;
+    position: absolute;
+    top: 10px;
+    left: 20%;
+    right: 35%;
+    flex-wrap: wrap;
+  }
+  .dropzone {
+    box-sizing: border-box;
+    border:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1c1c1c34;
+    position:fixed;
+    left:35%;
+    right:35%;
+    bottom:20px;
+    height:150px;
+    width:30%;
+    z-index: 1;
+    transition: opacity 0.5s ease-in-out, color 0.5s ease-in-out, border 0.5s ease-in-out;
+    opacity: 0;
+  }
+  .drag-drop {
+    transition: font-size 0.3s ease-in-out, text-weight 0.3s ease-in-out, background 0.3s ease-in-out;
+    padding: 4px;
+    z-index: 100;
+  }
+  </style>
+
+
+</head>
+<body>
+  <div id="demo"></div>
+  <div id="Words"> Find the words in 5 seconds</div>
+  <div id="Points">
+    Streak: 0
+  </div>
+  <div id="Counter">Timer: 0</div>
+  <div class="dropzone" id="outer-dropzone"><i class="fa fa-check" style="font-size: 5em;"></i></div>
+  <script>
+    
+    document.body.style.backgroundImage = "url('3.png')";
+
+    var CountDown = 5; //countdown til game start
+    
+      $(document)
+        .ready(function() {
+
+         document.getElementById("Counter").innerHTML = "Timer: " + CountDown; 
+        //  document.getElementById("Counter").style.visibility = "hidden";  //make countdown invisible
+        
+        setTimeout(function() { 
+        setInterval(function() {
+        // CountDown--; 
+        // CountDown >= 0;
+                  document.getElementById("Counter").innerHTML = CountDown;
+                  
+        }, 1000);
+                     document.getElementById("Counter").style.visibility = "hidden";
+          Randomize();
+        }, 5000);
+        
+        
+        function Randomize() {
+           var rand = Array[Math.floor(Math.random() * Array.length)];
+           document.getElementById("Words").innerHTML = rand;
+        }
+         
+        
+          $(".drag-drop") 
+            .hover(function(e) {
+              $(this)
+                .css("background", "rgba(0,255,0,0.1)");
+              }, 
+              function(e) {
+              $(this)
+                .css("background", "transparent");
+              } 
+            );
+          $(".drag-drop")
+            .mousedown(function(e) {
+              $(this)
+                .css("font-size", "2em");
+              $(this)
+                .css("font-variation-settings", "'wght' 100");
+            });
+          $(".drag-drop")
+            .mouseup(function() {
+              $(this)
+                .css("font-size", "1em");
+              $(this)
+                .css("font-variation-settings", "'wght' 50");
+                Refresh();
+            });
+        
+        
+        
+    
+    
+      function Refresh () { //refreshing the website when game over
+      setTimeout(function(){
+      window.location = window.location }, 500);
+      }
+    
+    
+    var CurrentScore = 0; //counts streak
+    
+    
+    
+      interact('.dropzone')
+        .dropzone({
+          accept: '.yes-drop',
+          overlap: 0.001,
+          ondropactivate: function(event) {
+            // add active dropzone feedback
+            event.target.classList.add('drop-active');
+            document.querySelector(".dropzone")
+              .style.opacity = "1";
+          },
+          ondragenter: function(event) { //when the word is hovering over the dropzone
+            var draggableElement = event.relatedTarget,
+              dropzoneElement = event.target;
+            // feedback the possibility of a drop
+            dropzoneElement.classList.add('drop-target');
+            draggableElement.classList.add('can-drop');
+            document.querySelector(".dropzone")
+            .style.color = "white"; //checkmark color
+            document.querySelector(".dropzone")
+            event.relatedTarget.style.color = "white";
+          },
+          ondragleave: function(event) {
+            // remove the drop feedback style
+            event.target.classList.remove('drop-target');
+            event.relatedTarget.classList.remove('can-drop');
+            document.querySelector(".dropzone")
+              .style.color = "black"; //checkmark
+            document.querySelector(".dropzone")
+            event.relatedTarget.style.color = "black";
+          },
+          ondrop: function(event) {
+            
+            if (event.relatedTarget.textContent == document.getElementById("Words").innerHTML) {
+              ++CurrentScore;
+              document.getElementById("Points").innerHTML = "Streak: " + CurrentScore;
+              event.relatedTarget.style.display = "none";
+              Array = Array.filter(v => v !== event.relatedTarget.textContent); 
+              Randomize();
+            } else {
+              alert("Streak lost!");
+              Refresh();
+              //--CurrentScore;
+            }
+            
+          },
+          ondropdeactivate: function(event) {
+            // remove active dropzone feedback
+            event.target.classList.remove('drop-active');
+            event.target.classList.remove('drop-target');
+            document.querySelector(".dropzone")
+              .style.opacity = "0";
+          }
+        });
+      interact('.drag-drop')
+        .draggable({
+          inertia: true,
+          restrict: {
+            endOnly: true,
+            elementRect: {
+              top: 0,
+              left: 0,
+              bottom: 1,
+              right: 1
+            }
+          },
+          autoScroll: false,
+          onmove: dragMoveListener,
+        });
+
+      function dragMoveListener(event) {
+        var target = event.target,
+          x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+          y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+        target.style.webkitTransform = target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      }
+    
+    
+    
+    
+    
+        var Array = ['flm','html','xhtml','html5','css3','javascript','jquery','lesscss','arrays','wordpress','facebook','fbml','table','.htaccess','php','c','.net','c#','java'];
+    
+    
+    var str = Array.join(' ');
+    
+    var words = str.split(" ");
+    var text, i;
+    text = "";
+    for (i = 0; i < words.length; i++) {
+      text += "<div class='yes-drop drag-drop'>" + words[i] + "</div>";
+    }
+    text += "";
+    document.getElementById("demo")
+      .innerHTML = text;
+    
+    
+    
+    
+    
+        
+        });
+    
+    
+    
+    
+  </script>
+</body>
+</html>
