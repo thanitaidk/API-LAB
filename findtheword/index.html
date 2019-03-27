@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Hello tet!</title>
+  <title>Find the word</title>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js">
   </script>
-   <link href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" rel="stylesheet">
    <script src="https://cdn.jsdelivr.net/npm/interactjs@1.3.4/dist/interact.js">
    </script>
-   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
   
   <style>
     
@@ -16,6 +14,7 @@
     overflow: hidden;
   }
   body {
+    background-size: 100%;
     position: relative;
     font-family: 'test'; 
     font-variation-settings: 'wght' 50;
@@ -52,13 +51,13 @@
     flex-wrap: wrap;
   }
   #Words { 
-    width: 30%;
-    font-size: 40px;
+    width: 70%;
+    font-size: 30px;
     display: flex;
     position: absolute;
-    top: 10px;
+    top: 20px;
     left: 20%;
-    right: 35%;
+    right: 50%;
     flex-wrap: wrap;
   }
   .dropzone {
@@ -83,6 +82,17 @@
     padding: 4px;
     z-index: 100;
   }
+  /* Blinking timer */
+  .blinking{ 
+    animation:blinkingText 1s infinite;
+  }
+  @keyframes blinkingText{
+    0%{     color: #000;    }
+    49%{    color: transparent; }
+    50%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #000;    }
+  }
   </style>
 
 
@@ -93,25 +103,27 @@
   <div id="Points">
     Streak: 0
   </div>
-  <div id="Counter">Timer: 0</div>
+  <div id="Counter" class="blinking"></div>
   <div class="dropzone" id="outer-dropzone"><i class="fa fa-check" style="font-size: 5em;"></i></div>
+  
+  
   <script>
     
-    document.body.style.backgroundImage = "url('3.png')";
+    document.body.style.backgroundImage = "url('3.jpg')";
 
     var CountDown = 5; //countdown til game start
+
+    
     
       $(document)
         .ready(function() {
 
          document.getElementById("Counter").innerHTML = "Timer: " + CountDown; 
-        //  document.getElementById("Counter").style.visibility = "hidden";  //make countdown invisible
         
         setTimeout(function() { 
         setInterval(function() {
-        // CountDown--; 
-        // CountDown >= 0;
-                  document.getElementById("Counter").innerHTML = CountDown;
+
+                  document.getElementById("Counter").innerHTML =  CountDown;
                   
         }, 1000);
                      document.getElementById("Counter").style.visibility = "hidden";
@@ -123,47 +135,14 @@
            var rand = Array[Math.floor(Math.random() * Array.length)];
            document.getElementById("Words").innerHTML = rand;
         }
-         
-        
-          $(".drag-drop") 
-            .hover(function(e) {
-              $(this)
-                .css("background", "rgba(0,255,0,0.1)");
-              }, 
-              function(e) {
-              $(this)
-                .css("background", "transparent");
-              } 
-            );
-          $(".drag-drop")
-            .mousedown(function(e) {
-              $(this)
-                .css("font-size", "2em");
-              $(this)
-                .css("font-variation-settings", "'wght' 100");
-            });
-          $(".drag-drop")
-            .mouseup(function() {
-              $(this)
-                .css("font-size", "1em");
-              $(this)
-                .css("font-variation-settings", "'wght' 50");
-                Refresh();
-            });
-        
-        
-        
+            
     
-    
-      function Refresh () { //refreshing the website when game over
+      function Refresh () { //refreshing the website when game over/wrong answer
       setTimeout(function(){
       window.location = window.location }, 500);
       }
     
-    
     var CurrentScore = 0; //counts streak
-    
-    
     
       interact('.dropzone')
         .dropzone({
@@ -175,7 +154,7 @@
             document.querySelector(".dropzone")
               .style.opacity = "1";
           },
-          ondragenter: function(event) { //when the word is hovering over the dropzone
+          ondragenter: function(event) { //when hovering over the dropzone
             var draggableElement = event.relatedTarget,
               dropzoneElement = event.target;
             // feedback the possibility of a drop
@@ -191,22 +170,25 @@
             event.target.classList.remove('drop-target');
             event.relatedTarget.classList.remove('can-drop');
             document.querySelector(".dropzone")
-              .style.color = "black"; //checkmark
+            .style.color = "black"; //checkmark
             document.querySelector(".dropzone")
             event.relatedTarget.style.color = "black";
           },
           ondrop: function(event) {
-            
             if (event.relatedTarget.textContent == document.getElementById("Words").innerHTML) {
               ++CurrentScore;
               document.getElementById("Points").innerHTML = "Streak: " + CurrentScore;
               event.relatedTarget.style.display = "none";
               Array = Array.filter(v => v !== event.relatedTarget.textContent); 
               Randomize();
-            } else {
-              alert("Streak lost!");
+
+              if (CurrentScore == 8){ //max score
+                alert("You beat the game!")
+                Refresh();
+              }
+            } else { //wrong answer or out of time
+              alert("Streak lost! Restarting game..");
               Refresh();
-              //--CurrentScore;
             }
             
           },
@@ -243,35 +225,18 @@
         target.setAttribute('data-y', y);
       }
     
-    
-    
-    
-    
-        var Array = ['flm','html','xhtml','html5','css3','javascript','jquery','lesscss','arrays','wordpress','facebook','fbml','table','.htaccess','php','c','.net','c#','java'];
-    
-    
+
+        var Array = ['flm','net','float','java','abstract','else','switch','byte'];    
     var str = Array.join(' ');
-    
-    var words = str.split(" ");
+    var words = str.split(" "); //splitting the words with space between them
     var text, i;
     text = "";
     for (i = 0; i < words.length; i++) {
       text += "<div class='yes-drop drag-drop'>" + words[i] + "</div>";
     }
     text += "";
-    document.getElementById("demo")
-      .innerHTML = text;
-    
-    
-    
-    
-    
-        
-        });
-    
-    
-    
-    
+    document.getElementById("demo").innerHTML = text;        
+        });    
   </script>
 </body>
 </html>
