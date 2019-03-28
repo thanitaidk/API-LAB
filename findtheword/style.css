@@ -1,0 +1,82 @@
+body {
+    background-size: 100%;
+    position: relative;
+    font-family: 'test';
+    font-variation-settings: 'wght'50;
+    transition: background-color 0.2s ease-in-out;
+}
+
+@font-face {
+    font-family: 'test';
+    src: url('https://cdn.glitch.com/b697b48c-d0d7-464e-a80a-a78adb9ac08e%2FFunkisMAUDemoGX.ttf?1537866579638');
+}
+
+#demo {
+    width: 90%;
+    display: flex;
+    position: absolute;
+    top: 150px;
+    left: 10%;
+    right: 10%;
+    flex-wrap: wrap;
+}
+
+#Counter {
+    color: red;
+    font-size: 40px;
+    width: 20%;
+    display: flex;
+    position: absolute;
+    top: 70px;
+    left: 60%;
+    flex-wrap: wrap;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#Points {
+    color: blue;
+    font-size: 20px;
+    width: 80%;
+    display: flex;
+    position: absolute;
+    top: 30px;
+    left: 60%;
+    flex-wrap: wrap;
+    transition: opacity 0.5s ease-in-out;
+}
+
+#Words {
+    width: 70%;
+    font-size: 40px;
+    display: flex;
+    position: absolute;
+    top: 30px;
+    left: 20%;
+    right: 50%;
+    flex-wrap: wrap;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.dropzone {
+    box-sizing: border-box;
+    border: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #1c1c1c34;
+    position: fixed;
+    left: 35%;
+    right: 35%;
+    bottom: 20px;
+    height: 150px;
+    width: 30%;
+    z-index: 1;
+    transition: opacity 0.5s ease-in-out, color 0.5s ease-in-out, border 0.5s ease-in-out;
+    opacity: 0;
+}
+
+.drag-drop {
+    transition: font-size 0.3s ease-in-out, text-weight 0.3s ease-in-out, background 0.3s ease-in-out;
+    padding: 4px;
+    z-index: 100;
+}
